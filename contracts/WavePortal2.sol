@@ -7,7 +7,7 @@ import "hardhat/console.sol";
 contract WavePortal2
 {
     //uint totalWaves;// Keep it here to avoid getting ALL waves with ALL the info just to get this number.
-    
+
     struct WaveLog{
         address userAddress;
         uint timestamp;
@@ -17,23 +17,23 @@ contract WavePortal2
 
     mapping(address => uint) userPointsTotal;
     mapping(address => WaveLog[]) userWavesLog;
-    
+
     event NewWave(address indexed _from, uint _timestamp, string _message);
     event NewPoints(address indexed _user, uint _pointsEarned, uint _pointsTotal);
 
     constructor()
     {
-        console.log("Welcome to the w1ldrabb1t Wave Portal!");
+        console.log("Welcome to the w1ldrabb1t Wave  2!");
     }
 
-    function wave(string memory _message) public 
+    function wave(string memory _message) public
     {
         WaveLog memory newWaveLog = WaveLog(msg.sender, block.timestamp, _message);
 
         userWavesLog[msg.sender].push(newWaveLog);
 
         wavesLog.push(newWaveLog);
-        
+
         emit NewWave(msg.sender, block.timestamp, _message);
 
         uint userWavesTotal = userWavesLog[msg.sender].length;
@@ -44,7 +44,7 @@ contract WavePortal2
             userPointsTotal[msg.sender]+=1;
             emit NewPoints(msg.sender, 1, userPointsTotal[msg.sender]);
 
-            console.log("Congrats!!! Now you have %d points and you waved %d times!", 
+            console.log("Congrats!!! Now you have %d points and you waved %d times!",
                 userPointsTotal[msg.sender],
                 userWavesTotal);
         }
