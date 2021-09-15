@@ -31,6 +31,14 @@ async function main()
       await waveTxn.wait();
     }
 
+    console.log("read getWavesSlice(0,3)...");
+    let wavesSlice03 = await waveContract.getWavesSlice(0,3);
+    for(let i=0; i<3; ++i)
+    {
+      console.log(wavesSlice03[i].message);
+    }
+    console.log("done.");
+
 
     contractBalance = await hre.ethers.provider.getBalance(waveContract.address);
     console.log("contractBalance: ", hre.ethers.utils.formatEther(contractBalance));

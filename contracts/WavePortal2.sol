@@ -39,8 +39,8 @@ contract WavePortal2
         uint userWavesTotal = userWavesLog[msg.sender].length;
         uint totalWaves = wavesLog.length;
 
-        if((block.timestamp - userWavesTotal - totalWaves) % 2 == 0)
-        {
+        //if((block.timestamp - userWavesTotal - totalWaves) % 2 == 0)
+        //{
             userPointsTotal[msg.sender]+=1;
             emit NewPoints(msg.sender, 1, userPointsTotal[msg.sender]);
 
@@ -48,24 +48,41 @@ contract WavePortal2
             uint prizeAmount = 0.0001 ether;
             prizeAmount = prizeAmount * userPointsTotal[msg.sender];
             console.log("prizeAmount: ", prizeAmount);
+
+            // How to send the error to the caller?
             require(prizeAmount <= address(this).balance, "Not enough money to payout the prize");
+
             (bool success,) = (msg.sender).call{value: prizeAmount}("");
             require(success, "Failed to payout the prize");
 
             console.log("Congrats!!! Now you have %d points and you waved %d times!",
                 userPointsTotal[msg.sender],
                 userWavesTotal);
-        }
+        /*}
         else
         {
             console.log("You waved %d times!", userWavesTotal);
-        }
+        }*/
 
     }
 
     function getAllWaves() view public returns (WaveLog[] memory)
     {
         return wavesLog;
+    }
+
+    function getWavesSlice(uint start, uint count) view public returns (WaveLog[] memory)
+    {
+        if((start+count) > wavesLog.length)
+          revert('getWavesSlice: start and count invalid');
+
+        WaveLog[] memory res = new WaveLog[](count);
+        uint resIdx = 0;
+        for(;start < count;++start)
+        {
+          res[resIdx++]=wavesLog[start];
+        }
+        return res;
     }
 
     function getTotalWaves() view public returns (uint)
