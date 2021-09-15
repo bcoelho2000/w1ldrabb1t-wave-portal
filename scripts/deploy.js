@@ -7,10 +7,12 @@ async function main()
     console.log("Deploying contracts with the account: ", deployer.address);
     console.log("Account Balance: ", (await deployer.getBalance()).toString());
 
-    const Token = await ethers.getContractFactory("WavePortal2");
-    const token = await Token.deploy();
+    const waveContractFactory = await ethers.getContractFactory("WavePortal2");
+    const waveContract = await waveContractFactory.deploy({value: ethers.utils.parseEther("0.01")});
+    await waveContract.deployed();
+    console.log("WavePortal Address:", waveContract.address);
 
-    console.log("WavePortal Address:", token.address);
+    //npx hardhat run scripts/deploy.js --network rinkeby
 }
 
 main()

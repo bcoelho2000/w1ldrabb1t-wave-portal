@@ -3,3 +3,4 @@ Deploying contracts with the account:  0x4a4cdE14525405d0a8e81d4AE631fE5a670ec57
 Account Balance:  10000000000000000
 WavePortal Address: 	0x0F57f25Fa08140c94830874aB6a388CeF5001E53
 WavePortal2 Address: 	0xF8ED7a7Cee5761b33bfa2A680A271c802467cA2B
+v2.1 with payout/prize Address: 0xECD0030dCA65548A9b4B3ad549deD3edD4487100
