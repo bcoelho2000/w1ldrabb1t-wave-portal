@@ -7,6 +7,7 @@ import "hardhat/console.sol";
 contract WavePortal2
 {
     //uint totalWaves;// Keep it here to avoid getting ALL waves with ALL the info just to get this number.
+    uint private seed;
 
     struct WaveLog{
         address userAddress;
@@ -28,6 +29,7 @@ contract WavePortal2
 
     function wave(string memory _message) public
     {
+        console.log("%s waved message %s", msg.sender, _message);
         WaveLog memory newWaveLog = WaveLog(msg.sender, block.timestamp, _message);
 
         userWavesLog[msg.sender].push(newWaveLog);
@@ -39,9 +41,17 @@ contract WavePortal2
         uint userWavesTotal = userWavesLog[msg.sender].length;
         uint totalWaves = wavesLog.length;
 
-        //if((block.timestamp - userWavesTotal - totalWaves) % 2 == 0)
-        //{
+        // Generate a PSEUDO random number between 0-10000000000000000
+        uint luckyNumber = (block.difficulty + block.timestamp + seed) % 100;
+        console.log("Lucky number: %s", luckyNumber);
+        seed = luckyNumber;
+
+        if(luckyNumber < 50)
+        {
+            console.log("%s won!", msg.sender);
             userPointsTotal[msg.sender]+=1;
+            console.log("New Points: ", userPointsTotal[msg.sender]);
+
             emit NewPoints(msg.sender, 1, userPointsTotal[msg.sender]);
 
             // Prize!
@@ -58,11 +68,17 @@ contract WavePortal2
             console.log("Congrats!!! Now you have %d points and you waved %d times!",
                 userPointsTotal[msg.sender],
                 userWavesTotal);
-        /*}
+        }
         else
         {
-            console.log("You waved %d times!", userWavesTotal);
-        }*/
+            // Unlucky... this will cost you points.
+            console.log("Unlucky... this will cost you...");
+            if(userPointsTotal[msg.sender] > 0)
+            {
+              userPointsTotal[msg.sender]-=1;
+              console.log("New Points: %s", userPointsTotal[msg.sender]);
+            }
+        }
 
     }
 

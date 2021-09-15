@@ -72,8 +72,8 @@
       ]
     },
     "C:\\Users\\bcoel\\github\\w1ldrabb1t-wave-portal\\contracts\\WavePortal2.sol": {
-      "lastModificationDate": 1631708708031,
-      "contentHash": "8c1565770dee0e2c1a9914432f950a46",
+      "lastModificationDate": 1631710783840,
+      "contentHash": "898f84a52abd7b706783f6f9d6ffd908",
       "sourceName": "contracts/WavePortal2.sol",
       "solcConfig": {
         "version": "0.8.4",

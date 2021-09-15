@@ -1,3 +1,4 @@
+
 async function main()
 {
     const [owner, randoPerson] = await hre.ethers.getSigners();
@@ -25,16 +26,20 @@ async function main()
 
     console.log("waving...")
 
-    for (let i=0; i<5;++i)
+    for (let i=0; i<10;++i)
     {
       let waveTxn = await waveContract.wave("A message");
       await waveTxn.wait();
     }
 
-    contractBalance = await hre.ethers.provider.getBalance(waveContract.address);
-    console.log("contractBalance: ", hre.ethers.utils.formatEther(contractBalance));
+    console.log("read getWavesSlice(0,3)...");
+    let wavesSlice03 = await waveContract.getWavesSlice(0,3);
+    for(let i=0; i<3; ++i)
+    {
+      console.log(wavesSlice03[i].message);
+    }
+    console.log("done.");
 
-    let allWaves = await waveContract.getAllWaves();
 }
 
 main()
