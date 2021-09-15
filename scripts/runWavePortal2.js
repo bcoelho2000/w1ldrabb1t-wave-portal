@@ -7,45 +7,35 @@ async function main()
 
     /*
     Hardhat will create a local Etehreum network for us, but just for this contract.
-    Then, after the script completes it’ll destroy that local network. 
-    So, every time you run the contract, it’ll be a fresh blockchain. 
-    Whats the point? It’s kinda like refreshing your local server every time 
+    Then, after the script completes it’ll destroy that local network.
+    So, every time you run the contract, it’ll be a fresh blockchain.
+    Whats the point? It’s kinda like refreshing your local server every time
         so you always start from a clean slate which makes it easy to debug errors.
     */
-    const waveContract = await waveContractFactory.deploy();
-    
+    const waveContract = await waveContractFactory.deploy({value: hre.ethers.utils.parseEther("0.1")});
+
     // We’ll wait until our contract is officially deployed to our local blockchain! Our `constructor` runs when we actually deploy.
     await waveContract.deployed();
 
-    console.log("Contract deployed to:", waveContract.address); 
-    console.log("Contract deployed by:", owner.address); 
+    console.log("Contract deployed to:", waveContract.address);
+    console.log("Contract deployed by:", owner.address);
 
-    let waveCount;
-    waveCount = await waveContract.getTotalWaves();
-    console.log("wave count: %d", waveCount);
+    let contractBalance = await hre.ethers.provider.getBalance(waveContract.address);
+    console.log("contractBalance: ", hre.ethers.utils.formatEther(contractBalance));
 
-    let waveTxn = await waveContract.connect(randoPerson).wave("This is a message!");
-    await waveTxn.wait();
-    console.log("Wave finished");
+    console.log("waving...")
 
-    waveTxn = await waveContract.connect(randoPerson).wave("New message!");
-    await waveTxn.wait();
-    console.log("Wave finished");
+    for (let i=0; i<10;++i)
+    {
+      let waveTxn = await waveContract.wave("A message");
+      await waveTxn.wait();
+    }
 
-    console.log("Get all waves");
+
+    contractBalance = await hre.ethers.provider.getBalance(waveContract.address);
+    console.log("contractBalance: ", hre.ethers.utils.formatEther(contractBalance));
+
     let allWaves = await waveContract.getAllWaves();
-    console.log(allWaves);
-
-    waveCount = await waveContract.getTotalWaves();
-    console.log("wave count: %d", waveCount);
-        
-    console.log("getWavesForAddress");
-    let wavesForAddress = await waveContract.getWavesForAddress(randoPerson.address);
-    console.log("%s wave count: %d", randoPerson.address, wavesForAddress.length);
-
-    console.log("getPointsForAddress");
-    let pointsForAddress = await waveContract.getPointsForAddress(randoPerson.address);
-    console.log("%s points: %d", randoPerson.address, pointsForAddress);
 }
 
 main()

@@ -21,7 +21,7 @@ contract WavePortal2
     event NewWave(address indexed _from, uint _timestamp, string _message);
     event NewPoints(address indexed _user, uint _pointsEarned, uint _pointsTotal);
 
-    constructor()
+    constructor () payable
     {
         console.log("Welcome to the w1ldrabb1t Wave  2!");
     }
@@ -39,10 +39,18 @@ contract WavePortal2
         uint userWavesTotal = userWavesLog[msg.sender].length;
         uint totalWaves = wavesLog.length;
 
-        if((block.timestamp - userWavesTotal - totalWaves) % 10 == 0)
+        if((block.timestamp - userWavesTotal - totalWaves) % 2 == 0)
         {
             userPointsTotal[msg.sender]+=1;
             emit NewPoints(msg.sender, 1, userPointsTotal[msg.sender]);
+
+            // Prize!
+            uint prizeAmount = 0.0001 ether;
+            prizeAmount = prizeAmount * userPointsTotal[msg.sender];
+            console.log("prizeAmount: ", prizeAmount);
+            require(prizeAmount <= address(this).balance, "Not enough money to payout the prize");
+            (bool success,) = (msg.sender).call{value: prizeAmount}("");
+            require(success, "Failed to payout the prize");
 
             console.log("Congrats!!! Now you have %d points and you waved %d times!",
                 userPointsTotal[msg.sender],
